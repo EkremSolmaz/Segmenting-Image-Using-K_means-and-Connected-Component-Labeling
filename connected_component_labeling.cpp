@@ -12,8 +12,8 @@ int main(int argc, char const *argv[])
 {
     srand(time(0));
 
-    int n = 4;
-    int m = 4;
+    int n = 6;
+    int m = 6;
 
     int **A = (int **)malloc(n * sizeof(int *));
     int **B = (int **)calloc(n, sizeof(int *));

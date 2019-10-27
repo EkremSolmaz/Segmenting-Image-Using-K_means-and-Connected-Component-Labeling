@@ -11,14 +11,15 @@ int findCentroid(int *x, int **K, int m, int n);
 float calculateDistance(int *x, int *k);
 int *calculateAverage(int *C, int CSize, int **X, int m, int n);
 void print2dArray(int **K, int m);
+void print1dArray(int *C, int m);
 
 int main(int argc, char const *argv[])
 {
 
     srand(time(0));
 
-    int n = 1250;
-    int m = 9;
+    int n = 42;
+    int m = 4;
 
     // Creating n random pixel variable X[n][3]
     int **X = (int **)malloc(n * sizeof(int *));
@@ -69,6 +70,11 @@ int main(int argc, char const *argv[])
             C[cent] = (int *)realloc(C[cent], CSizes[cent] * sizeof(int));
             C[cent][CSizes[cent] - 1] = i;
         }
+        // for (int i = 0; i < m; i++)
+        // {
+        //     print1dArray(C[i], CSizes[i]);
+        // }
+        
 
         //Creating KNew for new centroid values KNew[m][3]
         int **KNew = (int **)malloc(m * sizeof(int *));
@@ -161,4 +167,14 @@ void print2dArray(int **K, int m)
     {
         cout << K[i][0] << "\t" << K[i][1] << "\t" << K[i][2] << endl;
     }
+}
+
+void print1dArray(int *C, int m)
+{
+    for (int i = 0; i < m; i++)
+    {
+        cout << C[i] << "\t";
+    }
+    cout << endl;
+    cout << "====================> " << m << endl;
 }

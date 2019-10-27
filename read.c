@@ -9,22 +9,27 @@ int findCentroid(int *x, int **K, int m, int n);
 float calculateDistance(int *x, int *k);
 int *calculateAverage(int *C, int CSize, int **X, int m, int n);
 void print2dArray(int **K, int m);
+void print1dArray(int *C, int m);
 
 int main()
 {
-    CvMat *img = cvLoadImageM("image.png", CV_LOAD_IMAGE_UNCHANGED);
+    CvMat *img = cvLoadImageM("peppers_color.jpg", CV_LOAD_IMAGE_UNCHANGED);
 
-    int **X = (int **)malloc(img->rows * img->cols * sizeof(int *));
+    int nrow = img->rows;
+    int ncol = img->cols;
 
-    for (int i = 0; i < img->rows; i++)
+    printf("%d - %d\n", nrow, ncol);
+
+    int **X = (int **)malloc(nrow * ncol * sizeof(int *));
+    for (int i = 0; i < nrow; i++)
     {
-        for (int j = 0; j < img->cols; j++)
+        for (int j = 0; j < ncol; j++)
         {
-            X[i * img->rows + j] = (int *)malloc(3 * sizeof(int));
+            X[i * ncol + j] = (int *)malloc(3 * sizeof(int));
 
-            X[i * img->rows + j][0] = cvGet2D(img, i, j).val[0];
-            X[i * img->rows + j][1] = cvGet2D(img, i, j).val[1];
-            X[i * img->rows + j][2] = cvGet2D(img, i, j).val[2];
+            X[i * ncol + j][0] = cvGet2D(img, i, j).val[0];
+            X[i * ncol + j][1] = cvGet2D(img, i, j).val[1];
+            X[i * ncol + j][2] = cvGet2D(img, i, j).val[2];
         }
     }
 
@@ -39,9 +44,13 @@ int main()
     {
         K[i] = (int *)malloc(3 * sizeof(int));
 
-        K[i][0] = X[i][0];
-        K[i][1] = X[i][1];
-        K[i][2] = X[i][2];
+        // K[i][0] = X[i][0];
+        // K[i][1] = X[i][1];
+        // K[i][2] = X[i][2];
+
+        K[i][0] = rand() % 256;
+        K[i][1] = rand() % 256;
+        K[i][2] = rand() % 256;
     }
 
     float difference;
@@ -50,14 +59,12 @@ int main()
     do
     {
         difference = 0;
-
         // Creating m array to group pixels in X C[m][?]
         int **C = (int **)malloc(m * sizeof(int *));
         for (int i = 0; i < m; i++)
         {
             C[i] = (int *)malloc(sizeof(int));
         }
-
         // Creating m size array for sizes of groups CSizes[m]
         int *CSizes = (int *)calloc(m, sizeof(int));
 
@@ -69,6 +76,10 @@ int main()
             C[cent] = (int *)realloc(C[cent], CSizes[cent] * sizeof(int));
             C[cent][CSizes[cent] - 1] = i;
         }
+        // for (int i = 0; i < m; i++)
+        // {
+        //     print1dArray(C[i], CSizes[i]);
+        // }
 
         //Creating KNew for new centroid values KNew[m][3]
         int **KNew = (int **)malloc(m * sizeof(int *));
@@ -83,7 +94,6 @@ int main()
         for (int i = 0; i < m; i++)
         {
             difference += calculateDistance(K[i], KNew[i]);
-
             K[i] = KNew[i];
         }
 
@@ -94,7 +104,7 @@ int main()
         print2dArray(K, m);
         // print2dArray(KNew, m);
 
-        // printf("\n==================\n");
+        printf("\n==================\n");
 
     } while (difference > thresh);
 
@@ -161,4 +171,13 @@ void print2dArray(int **K, int m)
     {
         printf("%d\t%d\t%d\n", K[i][0], K[i][1], K[i][2]);
     }
+}
+
+void print1dArray(int *C, int m)
+{
+    for (int i = 0; i < m; i++)
+    {
+        printf("%d\t", C[i]);
+    }
+    printf("\n==================> %d\n", m);
 }
